@@ -6,7 +6,7 @@ import json;
 
 client = discord.Client()
 
-helpInfo = 'Hey!\nYou can type #test to test me.\nType in #check {summonername} to see if a buddy is in game. Type in #jinxed !'
+helpInfo = 'Hey!\nYou can type #test to test me.\nType in #check {summonername} to see if a buddy is in game.\nBy the way, be aware of #noob s. Type in #jinxed !'
 db = ps_db.psdb()
 
 @client.event
