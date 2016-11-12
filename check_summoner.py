@@ -11,7 +11,7 @@ class CouldNotFindSummonerException(LookupError):
     '''raise this when there's a lookup error for my app'''
 
 def check_if_summoner_ingame(message):
-    matches = re.search('(?<=#check ).+', str(message))
+    matches = re.search('(?<=check ).+', str(message))
     summonerName = matches.group(0)
     id = get_summoner_id(summonerName)
     return get_game_status(id)
@@ -25,8 +25,6 @@ def get_summoner_id(name):
     except urllib.request.HTTPError as e:
         if e.code == 404:
             raise CouldNotFindSummonerException('Could not find that guy')
-
-    print("Server responded : " + json_response)
     data = json.loads(json_response)
     return data[name.lower()]["id"]
 

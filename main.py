@@ -17,17 +17,18 @@ async def on_ready():
 @client.event
 async def on_message(message):
     if message.content.startswith('#'):
-        if message.content.startswith('#help'):
+        command = message.content[1:].lower()
+        if command.startswith('help'):
             await client.send_message(message.channel, helpInfo)
-        elif message.content.startswith('#test'):
+        elif command.startswith('test'):
             await client.send_message(message.channel, 'You said test! Nice!')
-        elif message.content.startswith('#jinxed'):
+        elif command.startswith('jinxed'):
             db.increase_jinxed()
             times = str(db.get_jinxed_times())
             await client.send_message(message.channel, 'Oh, you said jinxed? He\'s a total noob, trust me!\nI said that {0} times'.format(times))
-        elif message.content.startswith('#check'):
+        elif command.startswith('check'):
             try:
-                status = check_summoner.check_if_summoner_ingame(message.content)
+                status = check_summoner.check_if_summoner_ingame(command)
             except check_summoner.CouldNotFindSummonerException as e:
                 await client.send_message(message.channel, 'I could not find this summoner, unfortunately.')
                 return
@@ -36,7 +37,7 @@ async def on_message(message):
             else:
                 response_message = 'He\'s not playing rn.'
             await client.send_message(message.channel, response_message)
-        elif message.content.startswith('#noob'):
+        elif command.startswith('noob'):
             await client.send_message(message.channel, "Try #jinxed")
         else:
             await client.send_message(message.channel, 'I do not know this command. Try #help.')
