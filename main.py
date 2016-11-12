@@ -10,8 +10,9 @@ client = discord.Client()
 
 helpInfo = 'Hey!\nYou can type #test to test me.\nType in #check {summonername} to see if a buddy is in game.\nBy the way, be aware of #noob s. Type in #jinxed !'
 db = ps_db.psdb()
-my_id = json.loads(open('settings.json').read())["my_id"];
-my_app_name = json.loads(open('settings.json').read())["app_name"];
+owner_id = int(json.loads(open('settings.json').read())["owner_id"])
+admins = json.loads(open('settings.json').read())["admins"]
+my_app_name = json.loads(open('settings.json').read())["app_name"]
 @client.event
 async def on_ready():
     print('Hi, I\'m logged in!')
@@ -42,10 +43,14 @@ async def on_message(message):
             await client.send_message(message.channel, response_message)
         elif command.startswith('noob'):
             await client.send_message(message.channel, "Try #jinxed")
-        elif command.startswith('restart'):
-            if message.author.id == my_id:
-                await client.send_message(message.channel, 'Ok, you are authorized. I am restarting...')
-                os.system('heroku restart -a ' + my_app_name)
+        elif command.startswith('auth'):
+            user_id = int(message.author.id)
+            if user_id == owner_id:
+                await client.send_message(message.channel, 'Ok, you are the owner')
+            elif user_id in admins:
+                await client.send_message(message.channel, 'Ok, you are the admin')
+            else:
+                await client.send_message(message.channel, 'Sorry, I don\'t know you')
         else:
             await client.send_message(message.channel, 'I do not know this command. Try #help.')
 client.run(json.loads(open('settings.json').read())["bot_code"])
