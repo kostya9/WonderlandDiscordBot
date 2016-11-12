@@ -36,6 +36,8 @@ async def on_message(message):
             else:
                 response_message = 'He\'s not playing rn.'
             await client.send_message(message.channel, response_message)
+        elif message.content.startswith('#noob'):
+            await client.send_message(message.channel, "Try #jinxed")
         else:
             await client.send_message(message.channel, 'I do not know this command. Try #help.')
-client.run(json.loads(open('settings.json').read())["bot_code"]);
+client.run(json.loads(open('settings.json').read())["bot_code"])
