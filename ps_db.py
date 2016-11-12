@@ -46,6 +46,7 @@ class psdb:
         self.conn.commit()
 
     def add_message(self, name, message):
+        name = name.lower()
         cursor = self.conn.cursor()
         data = (name, message)
         cursor.execute("""
@@ -54,6 +55,7 @@ class psdb:
         self.conn.commit()
 
     def delete_message(self, name):
+        name = name.lower()
         cursor = self.conn.cursor()
         cursor.execute("""
         DELETE  FROM commands_messages WHERE name=%s;
@@ -77,6 +79,7 @@ class psdb:
         return times
 
     def get_message(self, name):
+        name = name.lower()
         cursor = self.conn.cursor()
         cursor.execute("SELECT commands_messages.message FROM commands_messages WHERE name=%s;", (name,))
         fetched = cursor.fetchall()

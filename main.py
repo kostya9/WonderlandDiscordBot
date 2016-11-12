@@ -96,7 +96,7 @@ async def on_message(message):
                 await client.send_message(message.channel, 'Gotcha!')
             else:
                 await client.send_message(message.channel, 'Sorry, I don\'t know you')
-        elif command.startswith('add_message'):
+        elif command.startswith('add_command'):
             if not authorization.is_admin(get_id(message)):
                 await client.send_message(message.channel, 'Sorry, I don\'t know you')
             args_split = args.split(' ', 1)
@@ -107,7 +107,7 @@ async def on_message(message):
             msg = args_split[1]
             db.add_message(name, msg)
             await client.send_message(message.channel, 'Gotcha!')
-        elif command.startswith('delete_message'):
+        elif command.startswith('delete_command'):
             if not authorization.is_admin(get_id(message)):
                 await client.send_message(message.channel, 'Sorry, I don\'t know you')
             db.delete_message(args)
