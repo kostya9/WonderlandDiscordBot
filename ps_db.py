@@ -20,6 +20,7 @@ class psdb:
             raise ConnectionError('Could not connect to db')
 
         self._init_jinxed()
+        self._init_commands_messages()
 
     def _init_jinxed(self):
         cursor = self.conn.cursor()
@@ -34,6 +35,30 @@ class psdb:
         INSERT INTO commands (name, times) VALUES ('jinxed', 0) ON CONFLICT DO NOTHING;
         """)
 
+    def _init_commands_messages(self):
+        cursor = self.conn.cursor()
+        cursor.execute("""
+        CREATE TABLE IF NOT EXISTS commands_messages (
+        name varchar(40) NOT NULL PRIMARY KEY,
+        message VARCHAR(100) NOT NULL
+        );
+        """)
+        self.conn.commit()
+
+    def add_message(self, name, message):
+        cursor = self.conn.cursor()
+        data = (name, message)
+        cursor.execute("""
+        INSERT INTO commands_messages (name, message) VALUES (%s, %s) ON CONFLICT DO NOTHING;
+        """, data)
+        self.conn.commit()
+
+    def delete_message(self, name):
+        cursor = self.conn.cursor()
+        cursor.execute("""
+        DELETE  FROM commands_messages WHERE name=%s;
+        """, (name,))
+        self.conn.commit()
 
     def increase_jinxed(self):
         cursor = self.conn.cursor()
@@ -50,5 +75,20 @@ class psdb:
         rows = cursor.fetchall()
         times = rows[0][0]
         return times
+
+    def get_message(self, name):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT commands_messages.message FROM commands_messages WHERE name=%s;", (name,))
+        fetched = cursor.fetchall()
+        if len(fetched) < 1:
+            return None
+        result = fetched[0][0]
+        return result
+
+    def get_all_messages(self):
+        cursor = self.conn.cursor()
+        cursor.execute("SELECT commands_messages.name FROM commands_messages")
+        messages = cursor.fetchall()
+        return [s[0] for s in messages]
 
 
